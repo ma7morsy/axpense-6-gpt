@@ -1,1 +1,0 @@
-# axpense-6-gpt
