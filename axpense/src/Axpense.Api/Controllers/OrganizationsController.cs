@@ -1,0 +1,3 @@
+using Microsoft.AspNetCore.Mvc; using Microsoft.EntityFrameworkCore; using Axpense.Api.Data; using Axpense.Api.Domain;
+namespace Axpense.Api.Controllers;
+[ApiController][Route("api/organizations")] public class OrganizationsController(AxpenseDbContext db):ControllerBase { [HttpGet] public async Task<IActionResult> Get()=>Ok(await db.Organizations.AsNoTracking().OrderBy(x=>x.Name).ToListAsync()); [HttpPost] public async Task<IActionResult> Create(CreateOrganizationRequest r){if(string.IsNullOrWhiteSpace(r.Name))return BadRequest("Organization name is required.");var o=new Organization{Name=r.Name.Trim()};db.Organizations.Add(o);await db.SaveChangesAsync();return Created($"/api/organizations/{o.Id}",o);} } public record CreateOrganizationRequest(string Name);
