@@ -1,0 +1,11 @@
+# 1. Navigate into your project root directory
+cd path/to/axpense
+
+# 2. Initialize a local Git repository
+git init
+
+# 3. Stage all project files
+git add .
+
+# 4. Commit your changes
+git commit -m "Initial commit: Axpense solution setup"
