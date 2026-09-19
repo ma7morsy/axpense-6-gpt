@@ -1,9 +1,0 @@
-using Microsoft.AspNetCore.Mvc; using Microsoft.EntityFrameworkCore; using Axpense.Api.Data; using Axpense.Api.Domain;
-namespace Axpense.Api.Controllers;
-[ApiController][Route("api/assignments")]
-public class AssignmentsController(AxpenseDbContext db):ControllerBase {
- [HttpGet] public async Task<IActionResult> Get(Guid organizationId)=>Ok(await db.VehicleAssignments.Include(x=>x.Vehicle).Include(x=>x.Driver).Where(x=>x.OrganizationId==organizationId).OrderByDescending(x=>x.StartDate).Select(x=>new {x.Id,x.VehicleId,x.DriverId,x.StartDate,x.EndDate,x.AssignmentType,x.Notes,Vehicle=x.Vehicle.PlateNumber,Driver=x.Driver.FullName}).ToListAsync());
- [HttpPost] public async Task<IActionResult> Post(VehicleAssignment a){if(a.OrganizationId==Guid.Empty)return BadRequest();var valid=await db.Vehicles.AnyAsync(v=>v.Id==a.VehicleId&&v.OrganizationId==a.OrganizationId)&&await db.Drivers.AnyAsync(d=>d.Id==a.DriverId&&d.OrganizationId==a.OrganizationId);if(!valid)return BadRequest("Vehicle or driver does not belong to the organization.");a.Id=Guid.NewGuid();db.VehicleAssignments.Add(a);await db.SaveChangesAsync();return Created($"/api/assignments/{a.Id}",a);}
- [HttpPut("{id:guid}")] public async Task<IActionResult> Put(Guid id,VehicleAssignment input){var a=await db.VehicleAssignments.FirstOrDefaultAsync(x=>x.Id==id&&x.OrganizationId==input.OrganizationId);if(a is null)return NotFound();a.VehicleId=input.VehicleId;a.DriverId=input.DriverId;a.StartDate=input.StartDate;a.EndDate=input.EndDate;a.AssignmentType=input.AssignmentType;a.Notes=input.Notes;await db.SaveChangesAsync();return Ok(a);}
- [HttpDelete("{id:guid}")] public async Task<IActionResult> Delete(Guid id,Guid organizationId){var a=await db.VehicleAssignments.FirstOrDefaultAsync(x=>x.Id==id&&x.OrganizationId==organizationId);if(a is null)return NotFound();db.VehicleAssignments.Remove(a);await db.SaveChangesAsync();return NoContent();}
-}

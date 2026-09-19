@@ -1,3 +1,0 @@
-namespace Axpense.Api.Domain;
-public class Driver:TenantEntity { public string FullName {get;set;}=""; public string Phone {get;set;}=""; public string? LicenseNumber {get;set;} public DateTime? LicenseExpiryDate {get;set;} public string Status {get;set;}="Active"; public DateTime? HireDate {get;set;} public string? Notes {get;set;} }
-public class VehicleAssignment:TenantEntity { public Guid VehicleId {get;set;} public Guid DriverId {get;set;} public DateTime StartDate {get;set;} public DateTime? EndDate {get;set;} public string AssignmentType {get;set;}="Primary"; public string? Notes {get;set;} public Vehicle Vehicle {get;set;}=null!; public Driver Driver {get;set;}=null!; }
